@@ -1,1 +1,42 @@
-a
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Load dataset
+df = pd.read_csv("Mall_Customers.csv")
+
+# Initial exploration
+print(df.info())
+print(df.describe())
+print(df.head())
+
+#Drop Duplicate
+df = df.drop_duplicates()
+
+# Check for null values
+print("Null values:\n", df.isnull().sum())
+
+# Handle missing values
+# Optionally drop or fill nulls
+df['Age'] = df['Age'].fillna(df['Age'].median())
+df['Annual Income (k$)'] = df['Annual Income (k$)'].fillna(df['Annual Income (k$)'].mean())
+df['Spending Score (1-100)'] = df['Spending Score (1-100)'].fillna(df['Spending Score (1-100)'].mean())
+
+# Standardize gender formatting
+df['Gender'] = df['Gender'].str.strip().str.title()
+
+# Standardize column names
+df.columns = df.columns.str.strip().str.lower().str.replace(' ', '_')
+
+# Convert gender to numeric
+df['gender'] = df['gender'].map({'Male': 0, 'Female': 1})
+
+# Boxplots for outlier detection
+sns.boxplot(data=df[['age', 'annual_income_(k$)', 'spending_score_(1-100)']])
+plt.title("Boxplot for Age, Income, and Spending Score")
+plt.show()
+
+# Final dataset preview
+print(df.head())
+
+import kagglehub
